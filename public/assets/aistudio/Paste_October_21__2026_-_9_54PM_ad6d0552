@@ -1,0 +1,602 @@
+# MASTER PROMPT: BUILD A COMPLETE MONEY BLOG WEBSITE WITH ADVANCED SEO AND AEO
+
+Act as a senior full-stack web developer, professional UI/UX designer, technical SEO expert, content strategist, and financial content editor.
+
+Your task is to build or improve a professional, fast, responsive, trustworthy money and personal finance blog website. The website must be designed to attract readers through Google Search and provide clear, useful answers for AI-powered search experiences.
+
+The website should publish helpful articles about saving money, budgeting, personal finance, banking, loans, credit cards, credit scores, investing basics, financial planning, taxes, and other relevant money topics.
+
+IMPORTANT: Follow every requirement below. Do not skip SEO implementation, link functionality, metadata, image accessibility, technical SEO, or existing project requirements.
+
+## 1. FIRST: INSPECT THE EXISTING PROJECT
+
+Before making changes:
+
+- Inspect the complete existing codebase, framework, routes, components, styling, content, and current website structure.
+- Identify all existing pages, blog articles, navigation links, images, and working features.
+- If this is an existing website, preserve its current design, branding, colors, typography, layout, animations, and working functionality unless a change is specifically required.
+- Do not unnecessarily redesign, rebuild, or delete existing components.
+- Do not replace existing content with placeholder content.
+- Do not break existing URLs, routing, responsive layouts, or features.
+- Reuse existing components and dependencies whenever practical.
+- Make the smallest safe changes necessary to implement the requirements below.
+- If this is a new project, build the complete website from scratch using a consistent, professional design.
+
+After inspecting the project, implement the changes directly. Do not stop after giving me an audit or a list of recommendations.
+
+## 2. WEBSITE PURPOSE AND DESIGN
+
+Create a professional money blog that feels trustworthy, modern, readable, and easy to navigate.
+
+The website should include:
+
+- Homepage with a clear headline, introduction, featured articles, latest posts, and topic categories.
+- Blog listing page with article cards and pagination or another crawlable content-loading method.
+- Individual article pages with complete SEO metadata and readable content.
+- Category pages for different financial topics.
+- About page explaining the website's purpose and editorial standards.
+- Contact page.
+- Privacy policy and terms pages, with appropriate content.
+- Financial disclaimer.
+- Search functionality if supported by the existing architecture.
+- Related articles and useful internal navigation.
+- Header, footer, breadcrumbs, and mobile navigation.
+
+Use a clean typography system, sufficient whitespace, readable line lengths, accessible contrast, and a responsive layout.
+
+The design must work properly on mobile phones, tablets, laptops, and desktop screens.
+
+Avoid unnecessary animations, excessive pop-ups, intrusive advertisements, and heavy scripts that slow down the website.
+
+## 3. MONEY BLOG TOPICS AND CONTENT STRUCTURE
+
+Organize the website into relevant categories, such as:
+
+- Personal Finance
+- Saving Money
+- Budgeting
+- Banking
+- Loans and Credit Cards
+- Credit Scores
+- Investing Basics
+- Financial Planning
+- Taxes
+- Money Management Tips
+
+Create useful articles that answer real questions readers have about money.
+
+Each article must have a clearly defined search intent and provide a genuinely useful answer. Avoid publishing multiple articles that target the same keyword without a clear reason.
+
+If existing articles are present, optimize them individually while preserving their useful information, original meaning, and established URLs.
+
+Do not create dozens of thin, repetitive, or automatically generated articles just to increase the number of pages.
+
+## 4. KEYWORD RESEARCH AND MAPPING
+
+For every blog article:
+
+1. Assign exactly one primary target keyword.
+2. Identify two closely related secondary keywords.
+3. Identify relevant long-tail keywords and natural variations where useful.
+4. Determine the search intent: informational, comparison, transactional, or navigational.
+5. Map the keyword to the correct page.
+6. Avoid keyword cannibalization between articles.
+7. Use the primary keyword naturally in the SEO title, H1, introduction, relevant headings, URL where appropriate, and meta description.
+8. Use related keywords naturally in the article body and relevant subheadings.
+9. Never use keyword stuffing, repetitive phrasing, or unnatural exact-match anchors.
+
+Maintain a keyword map for all articles with these fields:
+
+- Article title
+- Primary keyword
+- Secondary keyword 1
+- Secondary keyword 2
+- Search intent
+- URL slug
+- Article category
+
+Do not invent keyword search-volume figures or claim that keyword research has been verified when no reliable keyword data is available.
+
+## 5. UNIQUE AND SEO-FRIENDLY URLS
+
+Every indexable page must have its own unique, descriptive URL.
+
+Requirements:
+
+- Use short, clean, readable URLs.
+- Use lowercase letters and hyphens between words.
+- Avoid unnecessary parameters, random identifiers, and long strings.
+- Include the primary keyword when natural and appropriate.
+- Do not change existing published URLs unnecessarily.
+- If a URL must change, implement a relevant permanent 301 redirect from the old URL.
+- Prevent duplicate pages from competing in search results.
+- Use appropriate canonical URLs pointing to the preferred version of each page.
+- Ensure internal links point directly to the preferred canonical URL.
+
+Example:
+
+Good: /blog/how-to-create-a-monthly-budget
+
+Avoid: /blog/article?id=12345
+
+Do not create broken routes or links that lead to pages that do not exist.
+
+## 6. SEO TITLE TAGS
+
+Every indexable page must have a unique, descriptive HTML title tag.
+
+For blog articles:
+
+- Aim for 50–60 characters.
+- Include the primary keyword naturally.
+- Clearly communicate the topic and benefit.
+- Make the title useful and appealing to readers.
+- Avoid keyword stuffing and misleading promises.
+- Avoid duplicate title tags across articles.
+
+For other page types, use an appropriate title that accurately describes that page.
+
+Implement actual HTML metadata, not just a visible headline.
+
+Example:
+
+<title>How to Create a Monthly Budget That Works</title>
+
+Check the final character count programmatically or through a validation process. If a title falls outside the target range, revise it when doing so preserves clarity and natural wording.
+
+## 7. META DESCRIPTIONS
+
+Every indexable page must have its own unique meta description.
+
+For blog articles:
+
+- Aim for 150–160 characters.
+- Summarize the article accurately.
+- Include the primary keyword naturally where appropriate.
+- Communicate the practical benefit to the reader.
+- Use clear, natural language.
+- Avoid keyword stuffing, misleading claims, and duplicate descriptions.
+
+Example:
+
+<meta name="description" content="Learn how to create a monthly budget, track your spending, reduce unnecessary expenses, and build a savings plan that works for your financial goals.">
+
+Validate the final character count. Revise descriptions that fall outside the target range where practical.
+
+Never confuse the meta description with the article's visible introduction.
+
+## 8. ONE CLEAR H1 HEADING PER ARTICLE
+
+Every blog article must have one clear, descriptive H1 heading.
+
+The H1 should:
+
+- Match the article's actual topic.
+- Reflect the search intent.
+- Include the primary keyword naturally where appropriate.
+- Be different from unrelated page headings.
+- Avoid duplicate H1 elements caused by shared components.
+
+Use a logical heading hierarchy:
+
+- H1: Main article title.
+- H2: Main sections, preferably written as real questions.
+- H3: Supporting questions, explanations, or subsections beneath the appropriate H2.
+
+Do not select heading levels merely for visual styling. Use CSS to control appearance.
+
+## 9. H2 SUBHEADINGS MUST BE REAL QUESTIONS
+
+This is a critical requirement.
+
+Wherever appropriate, write the article's H2 headings as natural questions that readers might actually search for.
+
+Examples:
+
+- What Is Personal Finance?
+- How Do You Create a Monthly Budget?
+- How Much Money Should You Save Each Month?
+- What Is the Difference Between Saving and Investing?
+- How Can You Improve Your Credit Score?
+- What Should Beginners Know Before Investing?
+- How Can You Reduce Unnecessary Monthly Expenses?
+
+Avoid vague headings such as "Introduction," "More Information," and "Other Details" when a descriptive question would be more useful.
+
+Every H2 must introduce a section that genuinely answers that question.
+
+Do not force every minor heading into question form when doing so would make the article unnatural. Prioritize question-based H2 headings throughout the main article.
+
+## 10. ANSWER-FIRST CONTENT FOR AEO
+
+Optimize the articles for Answer Engine Optimization (AEO), featured snippets, and AI-powered search experiences.
+
+For every major question-based H2:
+
+1. Answer the question directly in the first one or two sentences.
+2. Follow with a clear explanation in simple language.
+3. Add supporting details, examples, lists, or tables when useful.
+4. Explain unfamiliar financial terms.
+5. Use short paragraphs and descriptive subheadings.
+6. Include relevant practical examples without presenting invented examples as real customer experiences.
+7. Make the answer understandable even when read independently of the rest of the article.
+
+Example:
+
+H2: How Can You Start Saving Money Every Month?
+
+Answer-first paragraph: You can start saving money by tracking your income and expenses, setting a realistic savings target, and transferring a fixed amount into savings regularly. Start with an amount you can maintain without neglecting essential expenses.
+
+Then explain practical steps, budgeting methods, common mistakes, and a worked example.
+
+Use numbered lists for processes, bullet lists for recommendations, and comparison tables when they genuinely improve understanding.
+
+Do not add unnecessary filler before answering the question.
+
+## 11. ARTICLE QUALITY AND ORIGINALITY
+
+Every article must be genuinely helpful, accurate, and sufficiently detailed for its topic.
+
+Each article should contain, where appropriate:
+
+- A useful introduction that quickly explains what the reader will learn.
+- The main answer near the beginning.
+- Question-based H2 sections.
+- Supporting H3 sections where needed.
+- Relevant examples and calculations.
+- Practical steps readers can follow.
+- Advantages, disadvantages, limitations, or risks where relevant.
+- Common mistakes and frequently asked questions.
+- Relevant internal links.
+- Trusted outbound references.
+- A concise conclusion with a useful next step.
+
+Use clear, natural English that an ordinary reader can understand.
+
+Avoid generic AI filler, keyword repetition, copied text, fabricated quotations, fake statistics, invented expert opinions, and unsupported claims.
+
+Do not claim that the website owner has personal financial experience, conducted an experiment, or interviewed someone unless that information has actually been supplied and verified.
+
+Add unique insights, practical examples, calculations, and original explanations where they provide genuine value.
+
+Do not add arbitrary word counts merely to make articles longer. Cover the topic comprehensively without unnecessary repetition.
+
+## 12. IMAGE SEO: FILENAMES, ALT TEXT, AND COMPRESSION
+
+Optimize every meaningful article image.
+
+### Image filenames
+
+Use descriptive, lowercase filenames separated by hyphens.
+
+Good example:
+monthly-budget-planning-example.webp
+
+Avoid:
+IMG_2031.jpg
+
+When renaming an existing image, update every reference to that image so nothing breaks.
+
+### Alt text
+
+Every meaningful image must have descriptive alt text that accurately explains its content or purpose.
+
+Example:
+
+<img src="/images/monthly-budget-planning-example.webp" alt="Example of a monthly budget showing income, expenses, and savings">
+
+Requirements:
+
+- Write concise, natural descriptions.
+- Include a keyword only when it accurately describes the image.
+- Do not stuff keywords into alt text.
+- Do not use the same generic alt text for every image.
+- Use an empty alt attribute for purely decorative images.
+- Do not invent details that cannot be seen in the image.
+- Preserve appropriate image dimensions and responsive behavior.
+
+### Image compression
+
+- Prefer optimized WebP or AVIF when supported.
+- Compress unnecessarily large image files.
+- Use responsive images and appropriate image dimensions.
+- Include width and height attributes or equivalent aspect-ratio handling to reduce layout shifts.
+- Lazy-load below-the-fold images.
+- Do not lazy-load the primary above-the-fold or likely Largest Contentful Paint image unnecessarily.
+- Use suitable fallbacks for unsupported image formats.
+
+Do not remove images or degrade their quality unnecessarily.
+
+## 13. INTERNAL LINKS AND DESCRIPTIVE ANCHOR TEXT
+
+Every article must contain approximately two or three relevant internal links when suitable destination pages exist.
+
+Internal links must point to other useful pages on the same website, such as related articles, relevant category pages, or useful guides.
+
+### Anchor text requirements
+
+Anchor text is the clickable text readers see.
+
+Use descriptive anchor text that tells readers what the destination page covers.
+
+Weak example:
+"For more information, click here."
+
+Strong example:
+"Learn how to create a monthly budget."
+
+Another strong example:
+"Understand the difference between saving and investing."
+
+Requirements:
+
+- Use descriptive, relevant anchor text for all meaningful internal links.
+- Avoid vague phrases such as "click here," "read more," and "this page" when a more descriptive phrase is possible.
+- Avoid using the exact same keyword-rich anchor for every link to a destination.
+- Link naturally within relevant paragraphs.
+- Link only to pages that exist.
+- Use valid, crawlable HTML anchor elements.
+- Avoid unnecessary JavaScript-only navigation.
+- Check all internal links for broken routes.
+- Ensure internal links point to the correct canonical URLs.
+
+If no suitable destination exists, do not invent a URL. Flag the missing destination or create a genuinely useful page when it fits the website's content plan.
+
+## 14. OUTBOUND LINKS TO TRUSTED SOURCES
+
+Add relevant outbound links to credible, authoritative external sources whenever they support financial claims, statistics, regulations, or practical guidance.
+
+For an India-focused money blog, consider official sources such as:
+
+- Reserve Bank of India: https://www.rbi.org.in/
+- Securities and Exchange Board of India: https://www.sebi.gov.in/
+- Income Tax Department of India: https://www.incometax.gov.in/
+- National Payments Corporation of India: https://www.npci.org.in/
+
+Choose the specific official page that supports the statement. Do not link to an unrelated homepage merely to satisfy a link requirement.
+
+For other jurisdictions, use the appropriate government regulator, tax authority, central bank, or other authoritative source.
+
+Requirements:
+
+- Link to genuine, relevant sources.
+- Use descriptive anchor text.
+- Place references near the claims they support.
+- Verify that the destination exists and supports the claim.
+- Do not invent citations, statistics, reports, or source URLs.
+- Do not add unnecessary outbound links just to reach a target number.
+- External links should use normal crawlable HTML links.
+- Open links in a new tab only when appropriate, and use safe rel attributes such as rel="noopener noreferrer" when applicable.
+
+Do not automatically add nofollow to every trusted editorial reference. Use link attributes according to the actual relationship and purpose of the link.
+
+If a financial claim cannot be verified, revise it, qualify it, or remove it.
+
+## 15. FINANCIAL TRUST AND CONTENT SAFETY
+
+Because the website covers money, accuracy and reader trust are essential.
+
+- Present financial information in a balanced, understandable manner.
+- Explain risks alongside potential benefits.
+- Never guarantee investment returns or financial outcomes.
+- Never describe a risky investment as risk-free.
+- Do not fabricate current interest rates, tax thresholds, bank offers, credit-card fees, or market prices.
+- Verify time-sensitive information using current authoritative sources before publishing.
+- Include the relevant country and date when regulations or financial rules depend on jurisdiction or time.
+- Clearly distinguish general educational information from individualized financial advice.
+- Include a suitable financial disclaimer.
+- Explain affiliate relationships and sponsored content where applicable.
+- Avoid misleading headlines, false urgency, and exaggerated financial promises.
+
+Do not imply that the website is operated by a licensed financial adviser or regulated institution unless that is true and verified.
+
+## 16. TECHNICAL SEO
+
+Implement the following technical SEO requirements:
+
+- Server-rendered or statically rendered HTML for important article content when supported by the architecture.
+- Crawlable links to articles and categories.
+- Unique title and meta-description elements.
+- Correct heading hierarchy.
+- Canonical tags.
+- XML sitemap containing eligible canonical URLs.
+- Appropriate robots.txt configuration.
+- Correct HTTP status codes.
+- Useful 404 page.
+- Redirects for any URLs that genuinely need to change.
+- Open Graph metadata for social sharing.
+- Appropriate language and viewport metadata.
+- Breadcrumb navigation where useful.
+- Structured data in valid JSON-LD where appropriate.
+- No accidental noindex directives on pages intended to appear in search results.
+- No broken internal links or unnecessary redirect chains.
+- No duplicate IDs or conflicting canonical URLs.
+- No accidental blocking of essential CSS, JavaScript, images, or article content.
+
+Use descriptive metadata for every page type.
+
+Do not include private pages, duplicate URLs, redirect URLs, or error pages in the XML sitemap.
+
+Generate Article or BlogPosting structured data for blog posts where appropriate. Include accurate headline, image, dates, author, publisher, and main entity information only when those details are available and correct.
+
+Add BreadcrumbList and WebSite structured data when appropriate.
+
+Do not add fake reviews, fake ratings, fabricated authors, or misleading financial product claims to structured data.
+
+Validate structured data syntax and ensure that it reflects visible page content.
+
+## 17. PERFORMANCE AND MOBILE EXPERIENCE
+
+Build the website with performance in mind.
+
+- Minimize unnecessary JavaScript and CSS.
+- Optimize images and font loading.
+- Avoid layout shifts.
+- Use responsive image sizes.
+- Prevent horizontal overflow on mobile devices.
+- Keep navigation accessible.
+- Ensure readable font sizes and sufficient contrast.
+- Use semantic HTML.
+- Provide visible keyboard focus states.
+- Use appropriate labels for interactive controls.
+- Ensure links and buttons have understandable purposes.
+- Avoid loading unnecessary third-party scripts.
+
+Aim for good Core Web Vitals and strong PageSpeed Insights results. Do not claim a particular performance score unless it has actually been tested.
+
+## 18. PAGE SOURCE AND RENDERED CONTENT
+
+The main article content, title, headings, links, and metadata must be accessible to search engines.
+
+Do not rely entirely on client-side interactions that hide important content from crawlers.
+
+Where feasible, ensure that important article text appears in the initial HTML response or is rendered through a reliable server-side or static-rendering process.
+
+Use semantic HTML elements such as:
+
+- <main>
+- <article>
+- <section>
+- <header>
+- <nav>
+- <footer>
+
+Use actual HTML heading elements and anchor elements instead of visually styled generic containers.
+
+## 19. FREQUENTLY ASKED QUESTIONS
+
+Include an FAQ section when it helps readers understand the topic or answers additional relevant search questions.
+
+FAQ requirements:
+
+- Questions must be relevant to the article.
+- Answers must be direct and accurate.
+- Avoid repeating the same answer in multiple places unnecessarily.
+- Do not invent questions just to increase keyword density.
+- Use accessible HTML markup.
+
+FAQ structured data should only be implemented when it follows current search-engine guidelines. Do not promise that FAQ rich results will appear in Google.
+
+## 20. EDITORIAL AND ARTICLE METADATA
+
+Each article should support the following fields in the existing content system or an appropriate content model:
+
+- Article title
+- SEO title
+- Meta description
+- Unique slug
+- Primary keyword
+- Two secondary keywords
+- Category
+- Excerpt
+- H1
+- Main article content
+- Author, if known
+- Publication date
+- Modified date, updated only after a meaningful update
+- Featured image
+- Image alt text
+- Internal links
+- Outbound references
+- Canonical URL
+- Relevant structured data
+
+Avoid displaying empty author profiles, fake biographies, fabricated credentials, or inaccurate publication dates.
+
+## 21. REUSABLE SEO COMPONENTS
+
+Implement reusable components or utilities wherever appropriate so that SEO quality remains consistent across the website.
+
+These may include:
+
+- SEO metadata component.
+- Article layout.
+- Breadcrumb component.
+- Related article component.
+- Reusable internal-link component.
+- Optimized image component.
+- Article structured-data component.
+- Sitemap generation.
+- Slug validation.
+- Metadata length validation.
+- Broken-link checking.
+
+Do not duplicate conflicting metadata across the layout and individual article pages.
+
+Make sure each page renders its own correct title, description, canonical URL, and structured data.
+
+## 22. PRE-PUBLISHING SEO CHECKLIST
+
+Before considering an article complete, verify the following:
+
+1. One primary keyword is assigned.
+2. Two secondary keywords are assigned.
+3. The URL is unique, short, clean, and appropriate.
+4. The title tag is approximately 50–60 characters.
+5. The meta description is approximately 150–160 characters.
+6. There is one clear H1.
+7. Main H2 headings are written as natural questions wherever appropriate.
+8. Major questions receive direct answers in the first one or two sentences.
+9. The article provides useful detail, examples, lists, or tables as appropriate.
+10. Every meaningful image has accurate alt text.
+11. Image filenames are descriptive.
+12. Images are optimized for performance.
+13. Approximately two or three relevant internal links are included when suitable pages exist.
+14. Internal-link anchor text is descriptive.
+15. Relevant outbound links point to genuine, trustworthy sources.
+16. Financial claims are accurate and appropriately qualified.
+17. Metadata is unique and correctly implemented.
+18. Canonical URLs are correct.
+19. Structured data is valid and matches visible content.
+20. Important article content is crawlable.
+21. The page works on mobile devices.
+22. There are no broken internal links or unintended redirects.
+23. The page has a useful reader experience and no unnecessary filler.
+
+Create an automated audit or validation report wherever practical. Do not mark a requirement as passed unless it has actually been checked.
+
+## 23. IMPLEMENTATION AND TESTING
+
+After implementation:
+
+- Run the existing project's build and available tests.
+- Resolve build errors and broken imports.
+- Verify that every important route loads correctly.
+- Verify that existing article links continue to work.
+- Inspect page titles, meta descriptions, H1 and H2 headings, alt text, and link destinations.
+- Check that internal links lead to real pages.
+- Check that outbound references are relevant.
+- Check sitemap and robots.txt behavior.
+- Verify that the design works on mobile and desktop.
+- Check that the article content is available to search engines.
+- Check for duplicate metadata and broken images.
+- Report anything that cannot be verified because an external service, credential, or deployment environment is unavailable.
+
+Do not claim to have tested a live deployment, external links, indexing, search rankings, or Core Web Vitals unless those checks were actually performed.
+
+## 24. FINAL EXECUTION INSTRUCTIONS
+
+Work directly on the project rather than merely explaining what should be done.
+
+Preserve the existing design and working functionality if this is an existing website.
+
+Apply the SEO rules consistently to the homepage, blog listing, categories, individual articles, and other relevant indexable pages.
+
+If there are existing articles, audit and optimize every existing article that is part of the project. Do not limit the implementation to a single example article.
+
+If new content is needed, create useful, original money-related content rather than repetitive placeholder posts.
+
+Use the project's existing framework and architecture whenever practical. Do not introduce unnecessary dependencies or rebuild the project using a different stack without a clear technical reason.
+
+When finished, provide a concise implementation report that includes:
+
+1. What was created or changed.
+2. Which pages and articles were updated.
+3. Which SEO requirements were implemented.
+4. Any broken links, missing information, or unresolved issues.
+5. The results of the available build and validation checks.
+6. Any manual steps still required before deployment.
+
+The final objective is a professional money blog that combines excellent user experience, reliable financial information, complete on-page SEO, technical SEO, descriptive links, optimized images, question-based H2 headings, answer-first content, and accessibility.
+
+Implement every applicable requirement without unnecessarily changing the existing design.
