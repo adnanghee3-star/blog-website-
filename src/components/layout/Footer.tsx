@@ -277,6 +277,9 @@ export function Footer({ onNavigate }: FooterProps) {
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>© {new Date().getFullYear()} WealthPulse Media. All rights reserved. Built for Search & AI Answer Engines.</p>
           <div className="flex items-center gap-6">
+            <a href="/keyword-research-table.csv" download="keyword-research-table.csv" className="hover:text-slate-300 transition-colors">
+              Keyword Research (CSV)
+            </a>
             <a href="/sitemap.xml" className="hover:text-slate-300 transition-colors" target="_blank" rel="noopener noreferrer">
               XML Sitemap
             </a>

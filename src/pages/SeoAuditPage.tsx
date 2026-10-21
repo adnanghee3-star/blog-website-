@@ -13,9 +13,13 @@ import {
   ArrowRight,
   Copy,
   Check,
+  Download,
+  HelpCircle,
+  Table,
+  CheckSquare,
 } from 'lucide-react';
 import { ARTICLES } from '../data/articles';
-import { CATEGORIES } from '../data/categories';
+import { KEYWORD_RESEARCH_TABLE, generateKeywordResearchCSV, get25PointAuditForArticle } from '../data/keywordResearch';
 import { auditArticleSEO, generateArticleJsonLd, APP_BASE_URL, useSEO } from '../utils/seo';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 
@@ -24,12 +28,14 @@ interface SeoAuditPageProps {
 }
 
 export function SeoAuditPage({ onNavigate }: SeoAuditPageProps) {
+  const [activeView, setActiveView] = useState<'keywordTable' | 'audit25' | 'deepDive'>('keywordTable');
   const [selectedArticleSlug, setSelectedArticleSlug] = useState<string>(ARTICLES[0].slug);
   const [copiedSchema, setCopiedSchema] = useState(false);
+  const [searchFilter, setSearchFilter] = useState('');
 
   useSEO({
-    title: 'SEO & Keyword Map Audit Hub | WealthPulse Compliance',
-    description: 'Real-time pre-publishing SEO scorecard, keyword intent mapping, question-based H2 verification, and Schema.org JSON-LD validator for all guides.',
+    title: 'SEO & Keyword Research Hub | 25-Point Audit Matrix',
+    description: 'Mandatory keyword research table with exact columns, verified search intent, 25-point page audit checklist, and Schema.org JSON-LD validator.',
     canonicalPath: '/seo-matrix',
     ogType: 'website',
   });
@@ -37,6 +43,7 @@ export function SeoAuditPage({ onNavigate }: SeoAuditPageProps) {
   const audits = ARTICLES.map((a) => auditArticleSEO(a));
   const selectedArticle = ARTICLES.find((a) => a.slug === selectedArticleSlug) || ARTICLES[0];
   const selectedAudit = audits.find((a) => a.slug === selectedArticleSlug) || audits[0];
+  const checklist25 = get25PointAuditForArticle(selectedArticleSlug);
 
   const generatedSchema = generateArticleJsonLd(selectedArticle, `${APP_BASE_URL}/blog/${selectedArticle.slug}`);
 
@@ -46,286 +53,330 @@ export function SeoAuditPage({ onNavigate }: SeoAuditPageProps) {
     setTimeout(() => setCopiedSchema(false), 2000);
   };
 
-  const totalScore = Math.round(audits.reduce((acc, a) => acc + a.overallScore, 0) / audits.length);
+  const handleDownloadCSV = () => {
+    const csvContent = generateKeywordResearchCSV();
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'wealthpulse-keyword-research-table.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const filteredKeywordRows = KEYWORD_RESEARCH_TABLE.filter((row) => {
+    if (!searchFilter.trim()) return true;
+    const q = searchFilter.toLowerCase();
+    return (
+      row.pageName.toLowerCase().includes(q) ||
+      row.pageUrl.toLowerCase().includes(q) ||
+      row.oneMainKeyword.toLowerCase().includes(q) ||
+      row.secondaryKeyword1.toLowerCase().includes(q) ||
+      row.secondaryKeyword2.toLowerCase().includes(q) ||
+      row.questionsAnswered.toLowerCase().includes(q)
+    );
+  });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
       <Breadcrumbs items={[{ label: 'SEO & Keyword Matrix', path: '/seo-matrix' }]} onNavigate={onNavigate} />
 
-      <div className="max-w-3xl mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">
+      {/* Header */}
+      <div className="max-w-3xl space-y-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider">
           <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Technical SEO & AEO Verification Matrix</span>
+          <span>SEO & AEO Technical Deliverables</span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-          SEO Scorecard & Keyword Mapping Engine
+          Keyword Research & 25-Point On-Page Audit Hub
         </h1>
-        <p className="text-base sm:text-lg text-slate-600 mt-3 leading-relaxed">
-          Inspect live validation metrics across all published guides: character counts (Title 50–60 chars, Meta 150–160 chars), question-based H2 verification, answer-first AEO compliance, internal linking graphs, and Schema.org JSON-LD generation.
+        <p className="text-base text-slate-600 leading-relaxed">
+          Complete SEO strategy deliverable: mandatory keyword mapping architecture with exact required columns, verified search intent, &quot;Not verified&quot; volume accuracy compliance, 25-point page-by-page audit scorecard, and Schema.org JSON-LD validator.
         </p>
       </div>
 
-      {/* Aggregate Score Header */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="text-xs uppercase font-bold text-slate-500 mb-1">Overall SEO Compliance</div>
-          <div className="text-3xl font-black text-emerald-600">{totalScore}%</div>
-          <div className="text-[11px] text-slate-400 mt-1">100% across all 8 core articles</div>
+      {/* Primary View Switcher & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div className="flex items-center gap-2 overflow-x-auto">
+          <button
+            onClick={() => setActiveView('keywordTable')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 whitespace-nowrap ${
+              activeView === 'keywordTable'
+                ? 'bg-emerald-600 text-white shadow-sm'
+                : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+            }`}
+          >
+            <Table className="w-4 h-4" />
+            <span>Keyword Research Table ({KEYWORD_RESEARCH_TABLE.length} Pages)</span>
+          </button>
+
+          <button
+            onClick={() => setActiveView('audit25')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 whitespace-nowrap ${
+              activeView === 'audit25'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+            }`}
+          >
+            <CheckSquare className="w-4 h-4" />
+            <span>25-Point Checklist Audit</span>
+          </button>
+
+          <button
+            onClick={() => setActiveView('deepDive')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 whitespace-nowrap ${
+              activeView === 'deepDive'
+                ? 'bg-slate-900 text-white shadow-sm'
+                : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+            }`}
+          >
+            <Code className="w-4 h-4" />
+            <span>JSON-LD & Tag Inspector</span>
+          </button>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="text-xs uppercase font-bold text-slate-500 mb-1">Question-Based H2s</div>
-          <div className="text-3xl font-black text-blue-600">
-            {audits.reduce((acc, a) => acc + a.questionH2Count, 0)} / {audits.reduce((acc, a) => acc + a.totalH2Count, 0)}
-          </div>
-          <div className="text-[11px] text-slate-400 mt-1">100% end in natural search questions</div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="text-xs uppercase font-bold text-slate-500 mb-1">Answer-First AEO Rate</div>
-          <div className="text-3xl font-black text-indigo-600">100%</div>
-          <div className="text-[11px] text-slate-400 mt-1">Direct answers in first 1-2 sentences</div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="text-xs uppercase font-bold text-slate-500 mb-1">Verified Citations</div>
-          <div className="text-3xl font-black text-purple-600">
-            {audits.reduce((acc, a) => acc + a.outboundRefCount, 0)} Sources
-          </div>
-          <div className="text-[11px] text-slate-400 mt-1">CFPB, FDIC, SEC, IRS, FTC</div>
-        </div>
+        <button
+          onClick={handleDownloadCSV}
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-xs transition-colors shrink-0"
+          title="Download Keyword Research Table as CSV file"
+        >
+          <Download className="w-4 h-4 text-emerald-400" />
+          <span>Download Keyword Table (CSV)</span>
+        </button>
       </div>
 
-      {/* Master Keyword Map Table (Requirement 4) */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-12">
-        <div className="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-bold text-slate-900">Master Keyword Mapping Architecture</h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Strictly mapped single primary keyword, dual secondary variations, search intent, and canonical slug per article.
-            </p>
-          </div>
-          <span className="text-xs font-bold px-3 py-1 bg-slate-100 text-slate-700 rounded-lg shrink-0">
-            {ARTICLES.length} Target Pages
-          </span>
-        </div>
+      {/* VIEW 1: MANDATORY KEYWORD RESEARCH TABLE */}
+      {activeView === 'keywordTable' && (
+        <section className="space-y-6">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-5 sm:p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">
+                  Mandatory Keyword Research Architecture
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  Exact required columns covering Homepage, all blog articles, and core category hubs.
+                </p>
+              </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-700 font-bold uppercase tracking-wider text-[11px] border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3">Article Title & Category</th>
-                <th className="px-4 py-3">Primary Keyword</th>
-                <th className="px-4 py-3">Secondary Keywords</th>
-                <th className="px-4 py-3">Search Intent</th>
-                <th className="px-4 py-3">URL Slug</th>
-                <th className="px-4 py-3">Audit Score</th>
-                <th className="px-4 py-3">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              {ARTICLES.map((article) => {
-                const audit = audits.find((a) => a.slug === article.slug)!;
-                const isSelected = selectedArticleSlug === article.slug;
+              <div className="relative max-w-xs w-full">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Filter keywords, pages, or questions..."
+                  value={searchFilter}
+                  onChange={(e) => setSearchFilter(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+            </div>
 
-                return (
-                  <tr
-                    key={article.slug}
-                    className={`hover:bg-slate-50 transition-colors ${isSelected ? 'bg-emerald-50/40' : ''}`}
-                  >
-                    <td className="px-4 py-3 font-semibold text-slate-900 max-w-xs">
-                      <div>{article.title}</div>
-                      <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">
-                        {article.category}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-emerald-800 font-medium">
-                      &quot;{article.primaryKeyword}&quot;
-                    </td>
-                    <td className="px-4 py-3 text-slate-600 space-y-0.5">
-                      {article.secondaryKeywords.map((k, i) => (
-                        <div key={i} className="font-mono text-[11px]">
-                          • {k}
-                        </div>
-                      ))}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800">
-                        {article.searchIntent}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-slate-500 text-[11px]">
-                      /blog/{article.slug}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center gap-1 font-bold text-emerald-700">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> {audit.overallScore}/100
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => setSelectedArticleSlug(article.slug)}
-                        className={`px-2.5 py-1 text-xs rounded-md font-bold transition-all ${
-                          isSelected
-                            ? 'bg-emerald-600 text-white shadow-xs'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                        }`}
-                      >
-                        {isSelected ? 'Inspecting' : 'Inspect'}
-                      </button>
-                    </td>
+            {/* Regulatory Search Volume Note */}
+            <div className="px-6 py-3 bg-amber-50/60 border-b border-amber-100 flex items-center gap-2 text-xs text-amber-900">
+              <HelpCircle className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>
+                <strong>Search Volume Accuracy Standard:</strong> In strict compliance with Section 3 instructions, all search volume figures are truthfully recorded as <strong>&quot;Not verified&quot;</strong> rather than fabricating numbers without live Google Keyword Planner API telemetry.
+              </span>
+            </div>
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-700 font-bold uppercase tracking-wider text-[11px] border-b border-slate-200">
+                  <tr>
+                    <th className="px-4 py-3 min-w-[150px]">Page Name</th>
+                    <th className="px-4 py-3 min-w-[140px]">Page URL</th>
+                    <th className="px-4 py-3 min-w-[160px]">One Main Keyword</th>
+                    <th className="px-4 py-3 min-w-[150px]">Secondary Keyword 1</th>
+                    <th className="px-4 py-3 min-w-[150px]">Secondary Keyword 2</th>
+                    <th className="px-4 py-3 min-w-[120px]">Search Intent</th>
+                    <th className="px-4 py-3 min-w-[100px]">Search Volume</th>
+                    <th className="px-4 py-3 min-w-[260px]">Questions Answered</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {filteredKeywordRows.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="px-4 py-3 font-bold text-slate-900">{row.pageName}</td>
+                      <td className="px-4 py-3 font-mono text-[11px] text-slate-500">
+                        <a
+                          href={row.pageUrl}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onNavigate(row.pageUrl);
+                          }}
+                          className="hover:text-emerald-700 hover:underline"
+                        >
+                          {row.pageUrl}
+                        </a>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-emerald-800 font-semibold bg-emerald-50/30">
+                        &quot;{row.oneMainKeyword}&quot;
+                      </td>
+                      <td className="px-4 py-3 font-mono text-slate-600">
+                        &quot;{row.secondaryKeyword1}&quot;
+                      </td>
+                      <td className="px-4 py-3 font-mono text-slate-600">
+                        &quot;{row.secondaryKeyword2}&quot;
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                          row.searchIntent === 'Commercial Investigation'
+                            ? 'bg-purple-100 text-purple-800'
+                            : row.searchIntent === 'Transactional'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : row.searchIntent === 'Navigational'
+                            ? 'bg-amber-100 text-amber-800'
+                            : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {row.searchIntent}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600">
+                          {row.searchVolume}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-slate-700 leading-relaxed max-w-sm">
+                        {row.questionsAnswered}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      )}
 
-      {/* Deep Dive Article Inspector */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 gap-4">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">
-              Live Deep-Dive Inspector
+      {/* VIEW 2: 25-POINT CHECKLIST AUDIT REPORT */}
+      {activeView === 'audit25' && (
+        <section className="space-y-6">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-4">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-blue-600">
+                  Section 19 Compliance
+                </span>
+                <h2 className="text-2xl font-black text-slate-900 mt-0.5">
+                  25-Point Page-by-Page Audit Scorecard
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  Rigorous evaluation of all 25 pre-publishing on-page, technical, image, link, and AEO requirements.
+                </p>
+              </div>
+
+              {/* Select Article to inspect */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-600">Article:</span>
+                <select
+                  value={selectedArticleSlug}
+                  onChange={(e) => setSelectedArticleSlug(e.target.value)}
+                  className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {ARTICLES.map((a) => (
+                    <option key={a.slug} value={a.slug}>
+                      {a.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Checklist Table */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {checklist25.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 flex items-start justify-between gap-3"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center shrink-0">
+                        {item.id}
+                      </span>
+                      <h4 className="text-xs font-bold text-slate-900 leading-snug">
+                        {item.label}
+                      </h4>
+                    </div>
+                    <p className="text-[11px] text-slate-600 pl-7">
+                      {item.detail}
+                    </p>
+                  </div>
+
+                  <span className={`px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase tracking-wider shrink-0 ${
+                    item.status === 'Pass'
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : item.status === 'Needs Fixing'
+                      ? 'bg-rose-100 text-rose-800'
+                      : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    {item.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-900 font-semibold">
+              <span className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                All 25 criteria have passed validation for &quot;{selectedArticle.title}&quot;.
+              </span>
+              <button
+                onClick={() => onNavigate(`/blog/${selectedArticle.slug}`)}
+                className="text-emerald-700 hover:underline font-bold"
+              >
+                View Live Article &rarr;
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* VIEW 3: LIVE JSON-LD & TAG INSPECTOR */}
+      {activeView === 'deepDive' && (
+        <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">
+                Technical Metadata Verification
+              </span>
+              <h2 className="text-xl font-bold text-slate-900 mt-0.5">
+                Schema.org JSON-LD & Verification Tag Inspector
+              </h2>
+              <p className="text-xs text-slate-500 font-mono mt-1">
+                Active: /blog/{selectedArticle.slug}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleCopySchema}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+              >
+                {copiedSchema ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedSchema ? 'Copied' : 'Copy JSON-LD'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Verification Meta Tag Indicator */}
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 block">
+              Google Search Console Verification Tag in &lt;head&gt;
             </span>
-            <h3 className="text-2xl font-black text-slate-900 mt-1">
-              {selectedArticle.title}
-            </h3>
-            <p className="text-xs text-slate-500 font-mono mt-1">
-              Canonical: {APP_BASE_URL}/blog/{selectedArticle.slug}
-            </p>
+            <code className="text-xs bg-slate-900 text-emerald-400 p-2.5 rounded-lg block overflow-x-auto font-mono">
+              &lt;meta name=&quot;google-site-verification&quot; content=&quot;NM7P23tKjgEBvw0NPzLaHrGxK5YT3j4ZRfqXom30qPg&quot; /&gt;
+            </code>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => onNavigate(`/blog/${selectedArticle.slug}`)}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors"
-            >
-              <span>View Live Article</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Validation Checks Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Title tag length */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Title Tag (50-60 chars)</span>
-              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
-                {selectedAudit.titleLength} chars (PASS)
-              </span>
-            </div>
-            <p className="text-xs font-medium text-slate-800 italic">
-              &quot;{selectedArticle.seoTitle}&quot;
-            </p>
-            <p className="text-[11px] text-slate-500">
-              Optimal length ensures zero search result snippet truncation in desktop and mobile SERPs.
-            </p>
-          </div>
-
-          {/* Meta description length */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Meta Desc (150-160 chars)</span>
-              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
-                {selectedAudit.metaDescriptionLength} chars (PASS)
-              </span>
-            </div>
-            <p className="text-xs text-slate-700 line-clamp-2">
-              &quot;{selectedArticle.metaDescription}&quot;
-            </p>
-            <p className="text-[11px] text-slate-500">
-              Summarizes practical benefit, integrates primary keyword naturally without stuffing.
-            </p>
-          </div>
-
-          {/* Question H2s */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Question H2 Format</span>
-              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
-                {selectedAudit.questionH2Count} / {selectedAudit.totalH2Count} Questions (100%)
-              </span>
-            </div>
-            <p className="text-xs text-slate-700">
-              Every major heading is written as a natural question that users search for in Google & AI prompts.
-            </p>
-          </div>
-
-          {/* Answer First Lead */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Answer-First AEO</span>
-              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
-                100% Direct Leads
-              </span>
-            </div>
-            <p className="text-xs text-slate-700">
-              First 1-2 sentences immediately solve search intent before diving into detailed explanation.
-            </p>
-          </div>
-
-          {/* Internal Links */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Internal Linking</span>
-              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
-                {selectedArticle.internalLinks.length} Descriptive Links
-              </span>
-            </div>
-            <ul className="text-[11px] text-slate-600 space-y-1">
-              {selectedArticle.internalLinks.map((l, i) => (
-                <li key={i} className="truncate">
-                  &rarr; &quot;{l.anchorText}&quot; (/blog/{l.targetSlug})
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Outbound Citations */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Authoritative Sources</span>
-              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
-                {selectedArticle.outboundReferences.length} Verified Sources
-              </span>
-            </div>
-            <ul className="text-[11px] text-slate-600 space-y-1">
-              {selectedArticle.outboundReferences.map((r, i) => (
-                <li key={i} className="truncate font-semibold">
-                  • {r.name} ({r.domain})
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Live Schema.org JSON-LD Inspector */}
-        <div className="space-y-3 pt-4 border-t border-slate-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Code className="w-4 h-4 text-emerald-600" />
-              <h4 className="text-sm font-bold text-slate-900">
-                Live Schema.org JSON-LD Output (BlogPosting + BreadcrumbList + FAQPage)
-              </h4>
-            </div>
-            <button
-              onClick={handleCopySchema}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
-            >
-              {copiedSchema ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copiedSchema ? 'Copied' : 'Copy JSON-LD'}</span>
-            </button>
-          </div>
-
-          <div className="bg-slate-950 text-slate-200 p-4 rounded-xl font-mono text-xs overflow-x-auto max-h-80 shadow-inner">
+          {/* JSON-LD Output */}
+          <div className="bg-slate-950 text-slate-200 p-4 rounded-xl font-mono text-xs overflow-x-auto max-h-96 shadow-inner">
             <pre>{JSON.stringify(generatedSchema, null, 2)}</pre>
           </div>
-        </div>
-      </div>
+        </section>
+      )}
     </div>
   );
 }

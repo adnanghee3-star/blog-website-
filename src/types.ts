@@ -89,3 +89,23 @@ export interface Category {
   gradient: string;
   primaryKeyword: string;
 }
+
+export interface KeywordResearchRow {
+  pageName: string;
+  pageUrl: string;
+  oneMainKeyword: string;
+  secondaryKeyword1: string;
+  secondaryKeyword2: string;
+  searchIntent: 'Informational' | 'Commercial Investigation' | 'Transactional' | 'Navigational';
+  searchVolume: string; // 'Not verified'
+  questionsAnswered: string;
+}
+
+export type AuditStatus = 'Pass' | 'Needs Fixing' | 'Not Verified';
+
+export interface AuditCheckItem {
+  id: number;
+  label: string;
+  status: AuditStatus;
+  detail: string;
+}
